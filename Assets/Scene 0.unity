@@ -90,6 +90,48 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &936107236
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1449643353
 GameObject:
   m_ObjectHideFlags: 0
@@ -102,6 +144,8 @@ GameObject:
   - 92: {fileID: 1449643356}
   - 124: {fileID: 1449643355}
   - 81: {fileID: 1449643354}
+  - 114: {fileID: 1449643359}
+  - 114: {fileID: 1449643360}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -171,12 +215,81 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1449643353}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -40}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!114 &1449643359
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1449643353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71a3027475b8f4537afecb6abebd8f98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wordListText: {fileID: 4900000, guid: 22e5a51e6732c452fab90efed574a934, type: 3}
+  numToParseBeforeYield: 10000
+  wordLengthMin: 3
+  wordLengthMax: 7
+  currLine: 0
+  totalLines: 0
+  longWordCount: 0
+  wordCount: 0
+--- !u!114 &1449643360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1449643353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f49a0a3b05de43d4a973b5fb0318474, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabLetter: {fileID: 1000011626799268, guid: b51e0d561aaa740cd8262fa880b8ecd0,
+    type: 2}
+  wordArea:
+    serializedVersion: 2
+    x: -24
+    y: 19
+    width: 48
+    height: 28
+  letterSize: 1.5
+  showAllWyrds: 0
+  bigLetterSize: 4
+  bigColorDim: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  bigColorSelected: {r: 1, g: 1, b: 1, a: 1}
+  bigLetterCenter: {x: 0, y: -16, z: 0}
+  scoreFontSizes:
+  - 24
+  - 36
+  - 36
+  - 1
+  scoreMidPoint: {x: 1, y: 1, z: 0}
+  scoreComboDelay: 0.5
+  wyrdPalette:
+  - {r: 0.9568628, g: 0.8078432, b: 0.882353, a: 1}
+  - {r: 1, g: 0.53333336, b: 0.49803925, a: 1}
+  - {r: 0.7411765, g: 0.6, b: 0.41960788, a: 1}
+  - {r: 0.7843138, g: 1, b: 0.82745105, a: 1}
+  - {r: 1, g: 0.93725497, b: 0.54901963, a: 1}
+  - {r: 0.59607846, g: 0.7725491, b: 0.6627451, a: 1}
+  - {r: 0.85098046, g: 0.6156863, b: 0.5058824, a: 1}
+  - {r: 0.83921576, g: 0.77647066, b: 0.6666667, a: 1}
+  mode: 0
+  currLevel:
+    levelNum: 0
+    longWordIndex: 0
+    word: 
+    subWords: []
+  bigLetters: []
+  bigLettersActive: []
+  testWord: 
 --- !u!1 &2021114422
 GameObject:
   m_ObjectHideFlags: 0
