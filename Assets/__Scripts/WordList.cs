@@ -30,9 +30,8 @@ public class WordList : MonoBehaviour
 	{
 		S = this; //Set up the singleton
 	}
-
-	// Use this for initialization
-	void Start()
+		
+	public void Init()
 	{
 		//Split the text of the wordListText on line feeds, which creates a large, populated string[]
 		//with all the words from the list
@@ -85,6 +84,9 @@ public class WordList : MonoBehaviour
 				//The yield will cause the execution of this method to wait here
 				//while other code executes and then continue from this point
 			}
+
+			//Send message to this gameObject to let it know the parse is done
+			gameObject.SendMessage("WordListParseComplete");
 		}
 	}
 
