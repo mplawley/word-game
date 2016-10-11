@@ -90,6 +90,48 @@ NavMeshSettings:
     cellSize: 0.16666667
     manualCellSize: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &936107236
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 19cec85269b9744ac9a379c2af612e47, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1449643353
 GameObject:
   m_ObjectHideFlags: 0
@@ -218,14 +260,36 @@ MonoBehaviour:
     width: 48
     height: 28
   letterSize: 1.5
-  showAllWyrds: 1
+  showAllWyrds: 0
   bigLetterSize: 4
+  bigColorDim: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  bigColorSelected: {r: 1, g: 1, b: 1, a: 1}
+  bigLetterCenter: {x: 0, y: -16, z: 0}
+  scoreFontSizes:
+  - 24
+  - 36
+  - 36
+  - 1
+  scoreMidPoint: {x: 1, y: 1, z: 0}
+  scoreComboDelay: 0.5
+  wyrdPalette:
+  - {r: 0.9568628, g: 0.8078432, b: 0.882353, a: 1}
+  - {r: 1, g: 0.53333336, b: 0.49803925, a: 1}
+  - {r: 0.7411765, g: 0.6, b: 0.41960788, a: 1}
+  - {r: 0.7843138, g: 1, b: 0.82745105, a: 1}
+  - {r: 1, g: 0.93725497, b: 0.54901963, a: 1}
+  - {r: 0.59607846, g: 0.7725491, b: 0.6627451, a: 1}
+  - {r: 0.85098046, g: 0.6156863, b: 0.5058824, a: 1}
+  - {r: 0.83921576, g: 0.77647066, b: 0.6666667, a: 1}
   mode: 0
   currLevel:
     levelNum: 0
     longWordIndex: 0
     word: 
     subWords: []
+  bigLetters: []
+  bigLettersActive: []
+  testWord: 
 --- !u!1 &2021114422
 GameObject:
   m_ObjectHideFlags: 0

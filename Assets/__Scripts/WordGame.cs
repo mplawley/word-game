@@ -23,6 +23,10 @@ public class WordGame : MonoBehaviour
 	public Color bigColorDim = new Color(0.8f, 0.8f, 0.8f);
 	public Color bigColorSelected = Color.white;
 	public Vector3 bigLetterCenter = new Vector3(0, -16, 0);
+	public List<float> scoreFontSizes = new List<float> { 24, 36, 36, 1};
+	public Vector3 scoreMidPoint = new Vector3(1, 1, 0);
+	public float scoreComboDelay = 0.5f;
+	public Color[] wyrdPalette;
 
 	[Header("------------")]
 
@@ -31,6 +35,8 @@ public class WordGame : MonoBehaviour
 	public List<Wyrd> wyrds;
 	public List<Letter> bigLetters;
 	public List<Letter> bigLettersActive;
+	public string testWord;
+	private string upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 	void Awake()
 	{
@@ -176,7 +182,16 @@ public class WordGame : MonoBehaviour
 
 				//The % here makes multiple columns line up
 				pos.y -= (i % numRows) * letterSize;
+
+				//Move the lett immediately to a position above the screen
+				lett.position = pos + Vector3.up * (20 + i % numRows);
+
+				//Then set the pos for it to interpolate to
 				lett.pos = pos;
+
+				//Increment lett.timeStart to move wyrds at different times
+				lett.timeStart = Time.time + i * 0.05f;
+
 				go.transform.localScale = Vector3.one * letterSize;
 				wyrd.Add(lett);
 			}
@@ -185,6 +200,9 @@ public class WordGame : MonoBehaviour
 			{
 				wyrd.visible = true; //Line for testing
 			}
+
+			//Color the wyrd based on length
+			wyrd.color = wyrdPalette[word.Length - WordList.S.wordLengthMin];
 
 			wyrds.Add(wyrd);
 
@@ -213,6 +231,10 @@ public class WordGame : MonoBehaviour
 			//Set the initial position of the big Letters below the screen
 			pos = new Vector3 (0, -100, 0);
 			lett.pos = pos;
+
+			//Increment lett.timeStart to have big Letters come in last
+			lett.timeStart = Time.time + currLevel.subWords.Count * 0.05f;
+			lett.easingCurve = Easing.Sin + "-0.18"; //Bouncy easing
 
 			col = bigColorDim;
 			lett.color = col;
@@ -267,5 +289,226 @@ public class WordGame : MonoBehaviour
 			pos.y += bigLetterSize * 1.25f;
 			bigLettersActive[i].pos = pos;
 		}
+	}
+
+	void Update()
+	{
+		Letter lett;
+		char c;
+
+		switch (mode)
+		{
+		case GameMode.inLevel:
+			//Iterate through each char input by the player this frame
+			foreach (char cIt in Input.inputString)
+			{
+				//Shift cIT to UPPERCASE
+				c = System.Char.ToUpperInvariant(cIt);
+
+				//Check to see if it's an uppercase letter
+				if (upperCase.Contains(c)) //Any uppercase letter
+				{
+					//Find an availbale Letter in bigLetters with this char
+					lett = FindNextLetterByChar(c);
+
+					//If a Letter was returned
+					if (lett != null)
+					{
+						//...then add this char to the testWord and move the returned bigger Letter to bigLettersActive
+						testWord += c.ToString();
+
+						//Move it from the inactive to the active List<>
+						bigLettersActive.Add(lett);
+						bigLetters.Remove(lett);
+						lett.color = bigColorSelected; //Make it the active color
+						ArrangeBigLetters(); //Rearrange the big Letters
+					}
+				}
+
+				if (c == '\b') //Backspace
+				{
+					//Remove the last Letter in bigLettersActive
+					if (bigLettersActive.Count == 0)
+					{
+						return;
+					}
+
+					if (testWord.Length > 1)
+					{
+						//Clear the last char of testWord
+						testWord = testWord.Substring(0, testWord.Length - 1);
+					}
+					else
+					{
+						testWord = "";
+					}
+
+					lett = bigLettersActive[bigLettersActive.Count - 1];
+					//Move it from the active to the inactive List<>
+					bigLettersActive.Remove(lett);
+					bigLetters.Add(lett);
+					lett.color = bigColorDim; //Make it the inactive color
+					ArrangeBigLetters(); //Rearrange the big Letters
+				}
+
+				if (c == '\n' || c == '\r') //Return/Enter
+				{
+					//Test the testWord against the words in WordLevel
+					StartCoroutine(CheckWord());
+				}
+
+				if (c == ' ') //Space
+				{
+					//Shuffle the bigLetters
+					bigLetters = ShuffleLetters(bigLetters);
+					ArrangeBigLetters();
+				}
+			}
+			break;
+		}
+	}
+
+	//This finds an available LEtter with the char c in bigLetters. If there isn't one available, it returns null.
+	Letter FindNextLetterByChar(char c)
+	{
+		//Search through each Letter in bigLetters
+		foreach (Letter l in bigLetters)
+		{
+			//If one has the same char as c
+			if (l.c == c)
+			{
+				//...then return it
+				return l;
+			}
+		}
+
+		//Otherwise, return null
+		return null;
+	}
+
+	public IEnumerator CheckWord()
+	{
+		//Test testWord against level.subWords
+		string subWord;
+		bool foundTestWord = false;
+
+		//Create a List<int> to hold the indices of other subWords that are contained within testWord
+		List<int> containedWords = new List<int>();
+
+		//Iterate through each word in currLevel.subWords
+		for (int i = 0; i < currLevel.subWords.Count; i++)
+		{
+			//If the ith Wyrd on screen has already been found
+			if (wyrds[i].found)
+			{
+				//...then continue & skip the rest of this iteration
+				continue; //This wors because the Wyrds on screen and the words in the subWords List<> are in the same order
+			}
+
+			subWord = currLevel.subWords[i];
+
+			//if this subWord is the testWord
+			if (string.Equals(testWord, subWord))
+			{
+				//...then highlight the subword
+				HighlightWyrd(i);
+				Score(wyrds[i], 1); //Score the testWord
+				foundTestWord = true;
+			}
+			else if (testWord.Contains(subWord)) //else if testWord contains this subWOrd, e.g. SAND contains AND
+			{
+				//...then add it to the list of containedWords
+				containedWords.Add(i);
+			}
+		}
+
+		//If the test word was found in subWords
+		if (foundTestWord)
+		{
+			//...then highlight the other words contained in testWord
+			int numContained = containedWords.Count;
+			int ndx;
+
+			//Highlight the words in reverse order
+			for (int i = 0; i < containedWords.Count; i++)
+			{
+				//yield for a bit before highlighting each word
+				yield return (new WaitForSeconds(scoreComboDelay));
+
+				ndx = numContained - i - 1;
+				HighlightWyrd(containedWords[ndx]);
+				Score(wyrds[containedWords[ndx]], i + 2); //Score other words
+				//The second parameter (i + 2) is the # of this word in the combo
+			}
+		}
+
+		//Clear the active big Letters regardless of whether testWord was valid
+		ClearBigLettersActive();
+	}
+
+	//Highlight a Wyrd
+	void HighlightWyrd(int ndx)
+	{
+		//Activate the subWord
+		wyrds[ndx].found = true; //Let it know it's been found
+
+		//Lighten its color
+		wyrds[ndx].color = (wyrds[ndx].color + Color.white) /2f;
+		wyrds[ndx].visible = true; //Mae its 3D Text visible
+	}
+
+	//Remove all the Letters from bigLettersActive
+	void ClearBigLettersActive()
+	{
+		testWord = ""; //Clear the testWord
+		foreach (Letter l in bigLettersActive)
+		{
+			bigLetters.Add(l); //Add each Letter to bigLetters
+			l.color = bigColorDim; //Set it to the inactive color
+		}
+		bigLettersActive.Clear(); //Clear the List<>
+		ArrangeBigLetters(); //Rearrange the Letters on screen
+	}
+
+	//Add to the score for this word. int combo is the number of this word in a combo
+	void Score(Wyrd wyrd, int combo)
+	{
+		//Get the position of th efirst Letter in the wyrd
+		Vector3 pt = wyrd.letters[0].transform.position;
+
+		//Create a List<> of Bezier points for the FloatingScore
+		List<Vector3> pts = new List<Vector3>();
+
+		//Convert the pt to a ViewportPoint. ViewportPoints range from 0 to 1
+		//across the screen and are used for GUI coordinates
+		pt = Camera.main.WorldToViewportPoint(pt);
+		pt.z = 0;
+
+		//Make pt the first Bezier point
+		pts.Add(pt);
+
+		//Add a second Bezier point
+		pts.Add(scoreMidPoint);
+
+		//Make the Scoreboard for the last Bezier point
+		pts.Add(Scoreboard.S.transform.position);
+
+		//Set the vaue of the Floating Score
+		int value = wyrd.letters.Count * combo;
+		FloatingScore fs = Scoreboard.S.CreateFloatingScore(value, pts);
+
+		fs.timeDuration = 2f;
+		fs.fontSizes = scoreFontSizes;
+
+		//Double the InOut Easing effect
+		fs.easingCurve = Easing.InOut + Easing.InOut;
+
+		//Make the text of the FloatingScore something like "3 x 2"
+		string txt = wyrd.letters.Count.ToString();
+		if (combo > 1)
+		{
+			txt += " x " + combo;
+		}
+		fs.GetComponent<GUIText>().text = txt;
 	}
 }
