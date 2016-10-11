@@ -114,7 +114,7 @@ public class WordGame : MonoBehaviour
 		//The LINQ syntax is different from regular C#
 		var sorted = from s in e
 			orderby s.Length ascending
-				select s;
+			select s;
 		return sorted;
 	}
 

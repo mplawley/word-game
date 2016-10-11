@@ -84,10 +84,9 @@ public class WordList : MonoBehaviour
 				//The yield will cause the execution of this method to wait here
 				//while other code executes and then continue from this point
 			}
-
-			//Send message to this gameObject to let it know the parse is done
-			gameObject.SendMessage("WordListParseComplete");
 		}
+		//Send message to this gameObject to let it know the parse is done
+		gameObject.SendMessage("WordListParseComplete");
 	}
 
 	//These methods allow other classes to access the private List<string>s
